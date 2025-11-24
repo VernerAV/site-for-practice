@@ -4,36 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ГБУ Жилищник района Строгино</title>
+	 <!-- Подключение CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <!-- Заголовок -->
     <header>
-        <div class="icon"><img src="img/icon" alt="icon"></div>
-        <div class="name"><h1>ГБУ "Жилищник Района Строгино"</h1></div>
-        <div id="search">
-            <form action="search.php" method="get">
-                <input type="text" name="query" placeholder="График отключения горячей воды">
-                <button type="submit"><img src="img/search" alt="search"></button>
-            </form>
-        </div>
-        <div class="enter"><a href="enter.php"></a></div>
+       <?php include "templates/header.php" ?>
     </header>
 <!-- меню -->
-   <div class="menu-container">
-    <nav class="main-menu">
-        <ul>
-            <li><a href="news.php">Новости</a></li>
-            <li><a href="price.php">Платные услуги</a></li>
-            <li><a href="about.php">О нас</a></li>
-            <li><a href="user.php">Личный кабинет</a></li>
-        </ul>
-    </nav>
-    
-    <div class="contact-info">
-        <div class="phone">Телефон: 8(495) 758-38-22</div>
-        <div class="email">Эл. почта: gbu-strogino@mail.ru</div>
-    </div>
-</div>
+
 <!-- Основная страница -->
     <main>
         <div class="banner1">
@@ -118,6 +98,8 @@
         </div>
     </main>
     
-    <footer></footer>
+    <footer>
+        <?php include "templates/footer.php"?>
+    </footer>
 </body>
 </html>

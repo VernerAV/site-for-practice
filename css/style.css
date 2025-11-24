@@ -1,0 +1,32 @@
+body {
+    margin: 0;
+    padding: 0 ;
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Десктоп */
+.container { padding: 0 60px; }
+
+/* Ноутбуки */
+@media (max-width: 1440px) {
+    .container { padding: 0 40px; }
+}
+
+/* Планшеты */
+@media (max-width: 1024px) {
+    .container { padding: 0 30px; }
+}
+
+/* Мобильные */
+@media (max-width: 768px) {
+    .container { padding: 0 20px; }
+}
+
+/* Маленькие мобильные */
+@media (max-width: 480px) {
+    .container { padding: 0 15px; }
+}
