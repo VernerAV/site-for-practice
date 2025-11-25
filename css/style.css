@@ -1,6 +1,45 @@
+/* Roboto */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.ttf') format('truetype');      
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Light.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-ExtraLight.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Medium.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+
+
+
 body {
     margin: 0;
     padding: 0 ;
+    font-family: 'Roboto';
 }
 
 .container {
@@ -29,4 +68,121 @@ body {
 /* Маленькие мобильные */
 @media (max-width: 480px) {
     .container { padding: 0 15px; }
+}
+/* баннер */
+.banner1 {
+    display: flex;
+    gap: 100px;
+    justify-content: center;
+    background: #1D3F5B;
+    height: 400px;
+    color: white;
+    text-align: center;
+    align-items: center;
+}
+
+.banner1 h1 {
+    font-weight: 600;
+}
+/* правая часть */
+.banner1 .right {
+    background: white;
+    color: black;
+    box-shadow: inset 22px 0 26.1px -11px rgba(29, 63, 91, 0.41);
+    padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Для многострочного текста */
+}
+
+.banner1 .right h1{
+      color: black;
+}
+/* Левая часть */
+.banner1 .left {
+    padding: 20px;
+    text-align: center;
+     display: flex;
+    flex-direction: column;
+}
+.banner1 .left a{
+    padding: 20px;
+    text-align: center;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    padding: 10px 30px 10px 30px;
+    margin-right: 10px;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.banner1 .left a:hover {
+      background-color: #3498db;
+    color: white;
+}
+
+.tel {
+    font-weight: 600;
+    font-size: 2em;
+}
+
+.light {
+    font-weight: 300;
+}
+
+/* Таблица */
+
+.schedule h1 {
+    color: black;
+    font-weight: 600;
+    margin-left: 20px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+/* таблица */
+table.iksweb {
+    width: 80%;
+    border-collapse: collapse;
+    font-family: 'Roboto', Arial, sans-serif;
+     margin: 0 auto;
+}
+
+table.iksweb th,
+table.iksweb td {
+    padding: 15px 10px;
+    text-align: center;
+    border: 1px black solid;
+}
+
+table.iksweb tr td:first-child {
+    text-align: left;
+    font-weight: 600;
+    background-color: #f8f9fa;
+    padding-left: 20px;
+}
+
+
+/* Чередование цветов строк */
+table.iksweb tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+table.iksweb tr:nth-child(odd) {
+    background-color: white;
+}
+
+/* Заголовок */
+table.iksweb tr:first-child {
+    background-color: #3498db;
+    color: white;
+}
+
+table.iksweb tr:first-child td {
+    font-weight: 700;
+    text-align: center;
 }

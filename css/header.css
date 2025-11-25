@@ -1,3 +1,39 @@
+/* Roboto - правильные font-weight */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-ExtraLight.ttf') format('truetype');
+    font-weight: 200;  /* ExtraLight обычно 200 */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Light.ttf') format('truetype');
+    font-weight: 300;  /* Light обычно 300 */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.ttf') format('truetype');
+    font-weight: 400;  /* Regular обычно 400 */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Medium.ttf') format('truetype');
+    font-weight: 500;  /* Medium обычно 500 */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
+    font-weight: 700;  /* Bold обычно 700 */
+    font-style: normal;
+}
+
 img {
     width: 60px;
     object-fit: contain;
@@ -13,6 +49,8 @@ img {
 h1{
     font-size: 1.5rem;
     color: white;
+    font-family: 'Roboto', Arial, sans-serif;;
+    font-weight: 200;
 }
 
 .header {
@@ -33,10 +71,10 @@ form {
     background-color: white;
     border-radius: 20px;
     width: 500px;
-    height: fit-content;
     display: flex;
     padding-left: 20px;
-    gap: 10px
+    gap: 10px;
+    height: fit-content;
 }
 
 form input {
@@ -75,11 +113,14 @@ form img {
     color: black;
     border-radius: 20px;
     padding: 10px 30px 10px 30px;
+    margin-right: 10px;
     text-decoration: none;
+    font-size: 1em;
+    white-space: nowrap;
 }
 
 .enter a:hover {
-      background-color: #3498db;
+    background-color: #3498db;
     color: white;
 }
 
@@ -88,11 +129,12 @@ form img {
 .main-menu {
     display: flex;
     align-items: center;
+    justify-content: center;
     max-width: 1600px;
     margin: 0 auto;
     padding: 20px 40px;
-    position: relative;
     min-height: 60px;
+    position: relative;
 }
 
 .main-menu ul {
@@ -101,16 +143,13 @@ form img {
     margin: 0;
     padding: 0;
     gap: 30px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .main-menu li {
     margin: 0;
 }
 
-/* СТИЛИ ДЛЯ ССЫЛОК МЕНЮ */
+/*ссылки меню */
 .main-menu a {
     text-decoration: none;
     color: #2c3e50;
@@ -119,11 +158,13 @@ form img {
     padding: 12px 24px;
     border-radius: 8px;
     transition: all 0.3s ease;
-    position: relative;
     overflow: hidden;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border: 2px solid transparent;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: block; 
+    text-align: center;
+    white-space: nowrap;
 }
 
 /* Эффект при наведении */
@@ -166,10 +207,10 @@ form img {
 }
 
 .contact-info {
-    margin-left: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .contact-info p {

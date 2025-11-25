@@ -32,6 +32,7 @@
         </div>
         <!-- Таблица график приема -->
         <div class="schedule">
+			<h1>График приема населения</h1>
             <table class="iksweb">
 		<tr>
 			<td></td>
