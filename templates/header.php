@@ -24,7 +24,7 @@
                 </button>
             </form>
         </div>
-    <div class="enter"><a href="enter.php">Вход/регистрация</a></div>
+    <div class="enter"><a href="login.php">Вход/регистрация</a></div>
    
 </div>
 
