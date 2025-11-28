@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -24,26 +28,35 @@
                 </button>
             </form>
         </div>
-    <div class="enter"><a href="login.php">Вход/регистрация</a></div>
-   
-</div>
-
-<nav class="main-menu">
-    <ul>
-        <li><a href="news.php">Новости</a></li>
-        <li><a href="price.php">Платные услуги</a></li>
-        <li><a href="about.php">О нас</a></li>
-        <li><a href="user.php">Личный кабинет</a></li>
-    </ul>
-
-    <div class="contact-info">
-        <p>Телефон: 8(495) 758-38-22</p>
-        <p>Эл. почта: gbu-strogino@mail.ru</p>
+        
+        <div class="enter">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="logout.php">Выйти</a>
+            <?php else: ?>
+                <a href="login.php">Вход/регистрация</a>
+            <?php endif; ?>
+        </div>
     </div>
-</nav>
+
+    <nav class="main-menu">
+        <ul>
+            <li><a href="news.php">Новости</a></li>
+            <li><a href="price.php">Платные услуги</a></li>
+            <li><a href="about.php">О нас</a></li>
+            <li>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a href="admin.php">Панель администратора</a>
+                <?php else: ?>
+                    <a href="user.php">Личный кабинет</a>
+                <?php endif; ?>
+            </li>
+        </ul>
+
+        <div class="contact-info">
+            <p>Телефон: 8(495) 758-38-22</p>
+            <p>Эл. почта: gbu-strogino@mail.ru</p>
+        </div>
+    </nav>
         
 </body>
 </html>
-
-
-

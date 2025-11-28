@@ -24,8 +24,7 @@ if (!isAdmin()) {
                 <h1>Панель администратора</h1>
                 <div class="admin-nav-links">
                     <span>Добро пожаловать, <?php echo $_SESSION['user_email']; ?></span>
-                    <a href="user.php">Личный кабинет</a>
-                    <a href="logout.php">Выйти</a>
+                    <a href="includes/logout.php">Выйти</a>
                 </div>
             </nav>
         </div>
