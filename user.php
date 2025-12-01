@@ -48,7 +48,7 @@ try {
                 <?php if ($_SESSION['user_role'] === 'admin'): ?>
                     <a href="admin.php">Панель администратора</a>
                 <?php endif; ?>
-                <a href="logout.php">Выйти</a>
+                <a href="includes/logout.php">Выйти</a>
             </nav>
         </header>
 

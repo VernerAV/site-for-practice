@@ -5,6 +5,11 @@ if (isset($_SESSION['user_id'])) {
     header('Location: user.php');
     exit();
 }
+
+if (isset($_GET['timeout'])) {
+    echo '<div class="alert alert-warning">Ваша сессия истекла из-за неактивности. Пожалуйста, войдите снова.</div>';
+}
+
 ?>
 
 <!DOCTYPE html>

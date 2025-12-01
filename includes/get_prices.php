@@ -2,10 +2,10 @@
 require_once 'config.php';
 
 try {
-    $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4");
+    $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    $sql = "SELECT * FROM services ORDER BY category, sort_order, service_name";
+    $sql = "SELECT * FROM services ORDER BY service_name";
     $stmt = $pdo->query($sql);
     $prices = $stmt->fetchAll();
     
@@ -27,6 +27,7 @@ try {
     }
     
 } catch (PDOException $e) {
-    echo '<tr><td colspan="4" style="text-align: center; color: red;">Ошибка загрузки услуг</td></tr>';
+    // Для отладки можно временно вывести ошибку
+    echo '<tr><td colspan="4" style="text-align: center; color: red;">Ошибка загрузки услуг: ' . htmlspecialchars($e->getMessage()) . '</td></tr>';
 }
 ?>

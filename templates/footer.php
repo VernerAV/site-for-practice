@@ -7,11 +7,12 @@
     <!-- Подключение стилей -->
      <link rel="stylesheet" href="css/footer.css">
 </head>
-<body>
+
+    <footer>
     <div class="footer-container">
         <div class="left">
             <div class="logo-section">
-                <div class="icon-f"><img src="img/icon.png" alt="icon"></div>
+                <div class="icon-f"><img src="img/icons/icon.png" alt="icon"></div>
                 <div class="name"><h1>ГБУ "Жилищник Района Строгино"</h1></div>
             </div>
             <p>г. Москва <br>
@@ -22,6 +23,7 @@
         </div>
         <div class="right">
             <ul>
+                <li><a href="index.php">Главная</a></li>
                 <li><a href="news.php">Новости</a></li>
                 <li><a href="price.php">Платные услуги</a></li>
                 <li><a href="about.php">О нас</a></li>
@@ -39,5 +41,6 @@
             </a>
         </div>
     </div>
-</body>
+    </footer>
+
 </html>
