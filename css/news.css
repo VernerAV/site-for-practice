@@ -1,9 +1,13 @@
 /* Основные стили страницы новостей */
-body {
+* {
     margin: 0;
     padding: 0;
+    font-family: 'Roboto', Arial, sans-serif;
 }
 
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+}
 .news-page {
     padding: 30px 0 80px;
     background: #f8fafc;

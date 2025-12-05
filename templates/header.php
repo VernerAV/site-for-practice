@@ -1,7 +1,4 @@
-<?php
-session_start();
-?>
-
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -19,7 +16,8 @@ session_start();
             <img src="img/icons/icon.png" alt="icon">
             <h1>ГБУ "Жилищник Района Строгино"</h1>
         </div>
-        <!-- Поиск -->
+   
+  <!-- Поиск -->
 <div id="search">
     <form action="search.php" method="get">
         <input type="text" name="query" id="searchInput" placeholder="Поиск новостей, услуг..." 
@@ -83,11 +81,37 @@ function selectSuggestion(text) {
 }
 </script>
         
+
+
+        
         <div class="enter">
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="includes/logout.php">Выйти</a>
+            <?php 
+              if (isset($_SESSION['user_id'])): 
+                $user_email = $_SESSION['user_email'] ?? '';
+                $user_name = $_SESSION['user_name'] ?? '';
+            ?>
+        <div class="user-info">
+            <div class="user-avatar">
+                <svg width="30" height="30" viewBox="0 0 30 30">
+                    <circle cx="15" cy="15" r="15" fill="#3498db"/>
+                    <text x="15" y="20" text-anchor="middle" fill="white" font-size="14">
+                        <?php 
+                        // Первая буква email или имени
+                        echo strtoupper(substr($user_email ?: ($user_name ?: 'U'), 0, 1)); 
+                        ?>
+                    </text>
+                </svg>
+            </div>
+            <div class="user-details">
+                <span class="user-email"><?php echo htmlspecialchars($user_email); ?></span>
+                <?php if (!empty($user_name)): ?>
+                    <span class="user-name"><?php echo htmlspecialchars($user_name); ?></span>
+                <?php endif; ?>
+            </div>
+            <a href="includes/logout.php" class="logout-btn">Выйти</a>
+        </div>
             <?php else: ?>
-                <a href="login.php">Вход/регистрация</a>
+                <a href="login.php" class="login-btn">Вход/регистрация</a>
             <?php endif; ?>
         </div>
     </div>
@@ -98,6 +122,11 @@ function selectSuggestion(text) {
             <li><a href="news.php">Новости</a></li>
             <li><a href="price.php">Платные услуги</a></li>
             <li><a href="about.php">О нас</a></li>
+            <li><?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a href="admin_massege.php">Сообщения</a>
+                <?php else: ?>
+                    <a href="contact.php">Сообщения</a>
+                <?php endif; ?></li>
             <li>
                 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
                     <a href="admin.php">Панель администратора</a>

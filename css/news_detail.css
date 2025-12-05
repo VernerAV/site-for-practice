@@ -1,4 +1,8 @@
 /* Страница детальной новости */
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+}
 .news-detail-page {
     padding: 40px 0 80px;
     background: #f8fafc;
