@@ -1,6 +1,4 @@
 <?php
-// admin_messages.php - Админ панель для управления сообщениями
-session_start();
 require_once 'includes/config.php';
 
 // Проверка прав администратора

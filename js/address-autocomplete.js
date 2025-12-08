@@ -50,19 +50,78 @@ function searchAddresses(query) {
     );
 }
 
+// Функция для обновления полного адреса
+function updateFullAddress() {
+    const streetInput = document.getElementById('street');
+    const fullAddressInput = document.getElementById('full_address');
+    const entranceInput = document.getElementById('entrance');
+    const floorInput = document.getElementById('floor');
+    const apartmentInput = document.getElementById('apartment');
+    
+    if (!streetInput || !fullAddressInput) return;
+    
+    const street = streetInput.value.trim();
+    const entrance = entranceInput ? entranceInput.value.trim() : '';
+    const floor = floorInput ? floorInput.value.trim() : '';
+    const apartment = apartmentInput ? apartmentInput.value.trim() : '';
+    
+    let fullAddress = street;
+    
+    if (entrance) {
+        fullAddress += `, подъезд ${entrance}`;
+    }
+    
+    if (floor) {
+        fullAddress += `, этаж ${floor}`;
+    }
+    
+    if (apartment) {
+        fullAddress += `, кв. ${apartment}`;
+    }
+    
+    fullAddressInput.value = fullAddress;
+}
+
+// Функция для автоматического заполнения полей при выборе адреса
+function autoFillAddressDetails(selectedAddress) {
+    const streetInput = document.getElementById('street');
+    const entranceInput = document.getElementById('entrance');
+    const floorInput = document.getElementById('floor');
+    const apartmentInput = document.getElementById('apartment');
+    
+    if (!streetInput) return;
+    
+    // Заполняем поле улицы
+    streetInput.value = selectedAddress;
+    
+    // Очищаем детали при выборе нового адреса
+    if (entranceInput) entranceInput.value = '';
+    if (floorInput) floorInput.value = '';
+    if (apartmentInput) apartmentInput.value = '';
+    
+    // Обновляем полный адрес
+    updateFullAddress();
+}
+
+// Функция для подготовки адреса перед отправкой формы
+function prepareAddress() {
+    updateFullAddress();
+    console.log('Отправляется полный адрес:', document.getElementById('full_address').value);
+    return true;
+}
+
 // Инициализация автодополнения
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Скрипт автодополнения загружен');
     
-    // Ищем поле address вместо street
-    const addressInput = document.getElementById('address');
+    const streetInput = document.getElementById('street');
     
-    if (!addressInput) {
-        console.error('Поле address не найдено!');
+    if (!streetInput) {
+        console.error('Поле street не найдено!');
         return;
     }
     
-    console.log('Поле address найдено:', addressInput);
+    console.log('Поле street найдено:', streetInput);
     
     // Создаем dropdown для подсказок
     const dropdown = document.createElement('div');
@@ -83,21 +142,39 @@ document.addEventListener('DOMContentLoaded', function() {
         margin-top: 5px;
     `;
     
-    // Делаем родительский контейнер относительным для позиционирования
-    const parentContainer = addressInput.parentNode;
+    const parentContainer = streetInput.parentNode;
     parentContainer.style.position = 'relative';
     parentContainer.appendChild(dropdown);
     
-    // Обработчик ввода в поле адреса
-    addressInput.addEventListener('input', function() {
+    // Назначаем обработчики на все поля адреса для обновления полного адреса
+    const addressInputs = ['street', 'entrance', 'floor', 'apartment'];
+    addressInputs.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', updateFullAddress);
+        }
+    });
+    
+    // Очищаем детали адреса при ручном изменении улицы
+    streetInput.addEventListener('input', function() {
         const query = this.value;
-        console.log('Введен текст:', query);
+        
+        // Если пользователь начал вводить новый адрес, очищаем детали
+        if (query.length < 2) {
+            const entranceInput = document.getElementById('entrance');
+            const floorInput = document.getElementById('floor');
+            const apartmentInput = document.getElementById('apartment');
+            
+            if (entranceInput) entranceInput.value = '';
+            if (floorInput) floorInput.value = '';
+            if (apartmentInput) apartmentInput.value = '';
+        }
+        
         dropdown.innerHTML = '';
         dropdown.style.display = 'none';
         
         if (query.length >= 2) {
             const results = searchAddresses(query);
-            console.log('Найдено результатов:', results.length, results);
             
             if (results.length > 0) {
                 results.forEach(address => {
@@ -121,37 +198,82 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     item.addEventListener('click', function() {
                         console.log('Выбран адрес:', address);
-                        addressInput.value = address;
+                        autoFillAddressDetails(address);
                         dropdown.style.display = 'none';
+                        
+                        // Фокус на следующее поле
+                        const entranceInput = document.getElementById('entrance');
+                        if (entranceInput) {
+                            entranceInput.focus();
+                        }
                     });
                     
                     dropdown.appendChild(item);
                 });
                 dropdown.style.display = 'block';
-                
-                // Добавляем границу если есть элементы
-                dropdown.style.border = '1px solid #ddd';
-            } else {
-                dropdown.style.display = 'none';
             }
-        } else {
-            dropdown.style.display = 'none';
         }
+        
+        // Обновляем полный адрес при ручном вводе
+        updateFullAddress();
     });
     
     // Скрываем dropdown при клике вне его
     document.addEventListener('click', function(e) {
-        if (!addressInput.contains(e.target) && !dropdown.contains(e.target)) {
+        if (!streetInput.contains(e.target) && !dropdown.contains(e.target)) {
             dropdown.style.display = 'none';
         }
     });
     
-    // Также скрываем при нажатии Escape
-    addressInput.addEventListener('keydown', function(e) {
+    // Закрываем dropdown по Escape
+    streetInput.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             dropdown.style.display = 'none';
         }
+        
+        // Навигация по подсказкам стрелками
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const items = dropdown.querySelectorAll('.dropdown-item');
+            if (items.length > 0 && dropdown.style.display === 'block') {
+                let currentIndex = -1;
+                items.forEach((item, index) => {
+                    if (item.style.background === 'rgb(248, 249, 250)') {
+                        currentIndex = index;
+                    }
+                });
+                
+                if (e.key === 'ArrowDown') {
+                    const nextIndex = (currentIndex + 1) % items.length;
+                    items[nextIndex].style.background = '#f8f9fa';
+                    if (currentIndex >= 0) {
+                        items[currentIndex].style.background = 'white';
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    const prevIndex = currentIndex <= 0 ? items.length - 1 : currentIndex - 1;
+                    items[prevIndex].style.background = '#f8f9fa';
+                    if (currentIndex >= 0) {
+                        items[currentIndex].style.background = 'white';
+                    }
+                }
+            }
+        }
+        
+        // Выбор подсказки по Enter
+        if (e.key === 'Enter') {
+            const selectedItem = dropdown.querySelector('.dropdown-item[style*="background: rgb(248, 249, 250)"]');
+            if (selectedItem && dropdown.style.display === 'block') {
+                e.preventDefault();
+                selectedItem.click();
+            }
+        }
     });
+    
+    // Инициализируем полный адрес при загрузке
+    updateFullAddress();
+    
+    // Экспортируем функцию для формы
+    window.prepareAddress = prepareAddress;
     
     console.log('Автодополнение инициализировано');
 });
