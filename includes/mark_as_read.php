@@ -2,49 +2,27 @@
 session_start();
 require_once 'config.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../login.php');
+if (!isset($_SESSION['user_id']) || !isset($_POST['request_id'])) {
+    header('Location: ../user.php');
     exit();
 }
 
-$request_id = $_POST['request_id'] ?? 0;
-
-if (!$request_id) {
-    $_SESSION['request_errors'] = ["Не указан ID заявки"];
-    header('Location: ../user.php#requests');
-    exit();
-}
+$user_id = $_SESSION['user_id'];
+$request_id = intval($_POST['request_id']);
 
 try {
     $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS);
     
-    // Получаем email пользователя
-    $user_sql = "SELECT email FROM users WHERE id = :user_id";
-    $user_stmt = $pdo->prepare($user_sql);
-    $user_stmt->execute([':user_id' => $_SESSION['user_id']]);
-    $user_data = $user_stmt->fetch();
+    // Обновляем статус заявки только если она принадлежит текущему пользователю
+    $sql = "UPDATE messages SET is_read = 1 
+            WHERE id = :id AND user_id = :user_id AND is_read = 0";
     
-    if (!$user_data) {
-        $_SESSION['request_errors'] = ["Пользователь не найден"];
-        header('Location: ../user.php#requests');
-        exit();
-    }
-    
-    // Помечаем как прочитанное
-    $update_sql = "UPDATE messages SET is_read = 1 
-                   WHERE id = :id AND user_email = :email";
-    $update_stmt = $pdo->prepare($update_sql);
-    $update_stmt->execute([
-        ':id' => $request_id,
-        ':email' => $user_data['email']
-    ]);
-    
-    $_SESSION['request_success'] = "Заявка отмечена как прочитанная";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':id' => $request_id, ':user_id' => $user_id]);
     
 } catch (PDOException $e) {
-    $_SESSION['request_errors'] = ["Ошибка при обновлении статуса"];
+    error_log("Ошибка при обновлении статуса заявки: " . $e->getMessage());
 }
 
-header('Location: ../user.php#requests');
+header('Location: ../user.php');
 exit();
-?>

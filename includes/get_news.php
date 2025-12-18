@@ -2,9 +2,7 @@
 require_once 'config.php';
 
 try {
-    // Используйте правильные параметры подключения
-    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
-    $pdo = new PDO($dsn, DB_USER, DB_PASS);
+    $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     $sql = "SELECT * FROM news ORDER BY created_at DESC";
@@ -15,6 +13,7 @@ try {
         echo '<tr><td colspan="4" style="text-align: center;">Новостей пока нет</td></tr>';
     } else {
         foreach ($news as $item) {
+            $section = $_GET['section'] ?? 'news';
             // Экранируем специальные символы для JavaScript
             $js_title = htmlspecialchars($item['title'], ENT_QUOTES);
             $js_description = htmlspecialchars($item['description'], ENT_QUOTES);

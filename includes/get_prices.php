@@ -13,6 +13,7 @@ try {
         echo '<tr><td colspan="4" style="text-align: center;">Услуг пока нет</td></tr>';
     } else {
         foreach ($prices as $item) {
+            $section = $_GET['section'] ?? 'price';
             echo '
             <tr>
                 <td>' . htmlspecialchars($item['id']) . '</td>

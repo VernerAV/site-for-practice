@@ -28,7 +28,7 @@
                 <span>Круглосуточно</span>
             </div>
             
-            <button class="btn">Оставить заявку на ремонт</button>
+           <a href="contact.php" class="btn">Оставить заявку на ремонт</a>
             
             <div class="tags">
                 <span>Вода</span>
@@ -141,7 +141,7 @@
                     <li><strong>Надежность</strong> — официальный договор и ответственность за результат</li>
                     <li><strong>Безопасность</strong> — все сотрудники прошли проверку и имеют допуски</li>
                 </ul>
-                <button class="btn btn-primary">Оставить заявку</button>
+                <a href="contact.php" class="btn btn-primary">Оставить заявку на ремонт</a>
             </div>
             <div class="service-image">
                 <img src="img/specialists.png" alt="Штатные специалисты">
@@ -159,7 +159,7 @@
                     <li><strong>Прозрачные условия</strong> и полную ответственность за результат</li>
                     <li><strong>Спокойствие и уверенность</strong> в качестве услуг</li>
                 </ul>
-                <button class="btn btn-primary">Оставить заявку</button>
+                <a href="contact.php" class="btn btn-primary">Оставить заявку на ремонт</a>
             </div>
             <div class="service-image">
                 <img src="img/warranty.png" alt="Гарантия на работы">
@@ -177,7 +177,7 @@
                     <li><strong>Отсутствие скрытых платежей</strong> и комиссий</li>
                     <li><strong>Возможность рассчитать точную стоимость онлайн</strong></li>
                 </ul>
-                <button class="btn btn-primary">Оставить заявку</button>
+                <a href="contact.php" class="btn btn-primary">Оставить заявку на ремонт</a>
             </div>
             <div class="service-image">
                 <img src="img/prices.png" alt="Прозрачные цены">

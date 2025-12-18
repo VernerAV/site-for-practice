@@ -13,6 +13,7 @@ try {
         echo '<tr><td colspan="5" style="text-align: center;">Пользователей нет</td></tr>';
     } else {
         foreach ($users as $user) {
+            $section = $_GET['section'] ?? 'user';
             $role_badge = $user['role'] === 'admin' ? '<span style="color: #e74c3c; font-weight: bold;">Админ</span>' : 'Пользователь';
             
             echo '

@@ -21,19 +21,28 @@ try {
     $user_stmt->execute([':user_id' => $user_id]);
     $user_data = $user_stmt->fetch();
 
-        // Заявки пользователя из таблицы messages
-    $requests_sql = "SELECT * FROM messages 
+    // Заявки пользователя из таблицы messages
+    $requests_sql = "SELECT * FROM message 
                      WHERE user_email = :user_email 
                      ORDER BY created_at DESC";
     $requests_stmt = $pdo->prepare($requests_sql);
     $requests_stmt->execute([':user_email' => $user_data['email']]);
     $requests = $requests_stmt->fetchAll();
 
-
 } catch (PDOException $e) {
     die("Ошибка базы данных: " . $e->getMessage());
 }
 
+// Проверяем наличие непрочитанных заявок для подсветки вкладки
+$has_unread_requests = false;
+if (!empty($requests)) {
+    foreach ($requests as $request) {
+        if (!$request['is_read']) {
+            $has_unread_requests = true;
+            break;
+        }
+    }
+}
 
 // Функции для разбора адреса на компоненты
 function extractStreetFromAddress($address) {
@@ -94,20 +103,6 @@ function extractApartmentFromAddress($address) {
     }
     return '';
 }
-
-try {
-    $requests_sql = "SELECT * FROM message 
-                     WHERE user_email = :user_email 
-                     ORDER BY created_at DESC";
-    $requests_stmt = $pdo->prepare($requests_sql);
-    $requests_stmt->execute([':user_email' => $user_data['email']]);
-    $requests = $requests_stmt->fetchAll();
-    
-} catch (Exception $e) {
-    $requests = [];
-    error_log("Ошибка при получении заявок: " . $e->getMessage());
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -141,7 +136,7 @@ try {
                 </ul>
             </div>
         <?php endif; ?>
-    <div class="container">
+        
         <header>
             <h1>Личный кабинет</h1>
             <nav>
@@ -157,7 +152,8 @@ try {
             <!-- Вкладки -->
             <div class="tabs">
                 <button class="tab-button active" onclick="showTab('profile')">Профиль</button>
-                <button class="tab-button" onclick="showTab('requests')">Мои заявки</button>
+                <button class="tab-button <?php echo $has_unread_requests ? 'unread' : ''; ?>" 
+                        onclick="showTab('requests')">Мои заявки</button>
                 <button class="tab-button" onclick="showTab('new-request')">Новая заявка</button>
             </div>
 
@@ -222,129 +218,129 @@ try {
                         </div>
                     </div>
                     
-        <button type="submit" class="btn-primary">Сохранить изменения</button>
-    </form>
-</div>
+                    <button type="submit" class="btn-primary">Сохранить изменения</button>
+                </form>
+            </div>
 
             <!-- Вкладка заявок -->
-<div id="requests" class="tab-content">
-    <h2>Мои заявки</h2>
-    
-    <?php if (empty($requests)): ?>
-        <div class="no-requests">
-            <div class="empty-state">
-                <div class="empty-icon">📋</div>
-                <h3>У вас пока нет заявок</h3>
-                <p>Оставьте свою первую заявку на услугу</p>
-                <a href="#new-request" onclick="showTab('new-request')" class="btn-primary">Создать заявку</a>
-            </div>
-        </div>
-    <?php else: ?>
-        <div class="requests-stats">
-            <div class="stat-item">
-                <span class="stat-count"><?php echo count($requests); ?></span>
-                <span class="stat-label">Всего заявок</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-count"><?php echo count(array_filter($requests, function($r) { return !$r['is_read']; })); ?></span>
-                <span class="stat-label">Новых</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-count"><?php echo count(array_filter($requests, function($r) { return !empty($r['admin_response']); })); ?></span>
-                <span class="stat-label">С ответом</span>
-            </div>
-        </div>
-        
-        <div class="requests-list">
-            <?php foreach ($requests as $request): ?>
-                <div class="request-card <?php echo $request['is_read'] ? 'read' : 'unread'; ?>">
-                    <div class="request-card-header">
-                        <div class="request-title">
-                            <h3><?php echo htmlspecialchars($request['subject']); ?></h3>
-                            <div class="request-meta-badges">
-                                <span class="request-id">#<?php echo htmlspecialchars($request['id']); ?></span>
-                                <?php if (!$request['is_read']): ?>
-                                    <span class="badge-new">НОВАЯ</span>
-                                <?php endif; ?>
-                                <?php if (!empty($request['admin_response'])): ?>
-                                    <span class="badge-answered">✅ ОТВЕЧЕНО</span>
-                                <?php endif; ?>
-                            </div>
+            <div id="requests" class="tab-content">
+                <h2>Мои заявки</h2>
+                
+                <?php if (empty($requests)): ?>
+                    <div class="no-requests">
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <h3>У вас пока нет заявок</h3>
+                            <p>Оставьте свою первую заявку на услугу</p>
+                            <button onclick="showTab('new-request')" class="btn-primary">Создать заявку</button>
                         </div>
-                        <div class="request-date">
-                            <?php echo date('d.m.Y H:i', strtotime($request['created_at'])); ?>
+                    </div>
+                <?php else: ?>
+                    <div class="requests-stats">
+                        <div class="stat-item">
+                            <span class="stat-count"><?php echo count($requests); ?></span>
+                            <span class="stat-label">Всего заявок</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-count"><?php echo count(array_filter($requests, function($r) { return !$r['is_read']; })); ?></span>
+                            <span class="stat-label">Новых</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-count"><?php echo count(array_filter($requests, function($r) { return !empty($r['admin_response']); })); ?></span>
+                            <span class="stat-label">С ответом</span>
                         </div>
                     </div>
                     
-                    <div class="request-content">
-                        <div class="message-preview">
-                            <?php 
-                            $message = $request['message'];
-                            // Обрезаем длинное сообщение для предпросмотра
-                            if (strlen($message) > 300) {
-                                $message = substr($message, 0, 300) . '...';
-                            }
-                            echo nl2br(htmlspecialchars($message));
-                            ?>
-                        </div>
-                        
-                        <?php if (!empty($request['admin_response'])): ?>
-                            <div class="admin-response">
-                                <div class="response-header">
-                                    <h4>Ответ администратора</h4>
-                                    <?php if ($request['responded_at']): ?>
-                                        <span class="response-date">
-                                            <?php echo date('d.m.Y H:i', strtotime($request['responded_at'])); ?>
-                                        </span>
+                    <div class="requests-list">
+                        <?php foreach ($requests as $request): ?>
+                            <div class="request-card <?php echo $request['is_read'] ? 'read' : 'unread'; ?>">
+                                <div class="request-card-header">
+                                    <div class="request-title">
+                                        <h3><?php echo htmlspecialchars($request['subject']); ?></h3>
+                                        <div class="request-meta-badges">
+                                            <span class="request-id">#<?php echo htmlspecialchars($request['id']); ?></span>
+                                            <?php if (!$request['is_read']): ?>
+                                                <span class="badge-new">НОВАЯ</span>
+                                            <?php endif; ?>
+                                            <?php if (!empty($request['admin_response'])): ?>
+                                                <span class="badge-answered">✅ ОТВЕЧЕНО</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div class="request-date">
+                                        <?php echo date('d.m.Y H:i', strtotime($request['created_at'])); ?>
+                                    </div>
+                                </div>
+                                
+                                <div class="request-content">
+                                    <div class="message-preview">
+                                        <?php 
+                                        $message = $request['message'];
+                                        // Обрезаем длинное сообщение для предпросмотра
+                                        if (strlen($message) > 300) {
+                                            $message = substr($message, 0, 300) . '...';
+                                        }
+                                        echo nl2br(htmlspecialchars($message));
+                                        ?>
+                                    </div>
+                                    
+                                    <?php if (!empty($request['admin_response'])): ?>
+                                        <div class="admin-response">
+                                            <div class="response-header">
+                                                <h4>Ответ администратора</h4>
+                                                <?php if ($request['responded_at']): ?>
+                                                    <span class="response-date">
+                                                        <?php echo date('d.m.Y H:i', strtotime($request['responded_at'])); ?>
+                                                    </span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="response-content">
+                                                <?php echo nl2br(htmlspecialchars($request['admin_response'])); ?>
+                                            </div>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
-                                <div class="response-content">
-                                    <?php echo nl2br(htmlspecialchars($request['admin_response'])); ?>
+                                
+                                <div class="request-card-footer">
+                                    <div class="request-actions">
+                                        <?php if (!$request['is_read']): ?>
+                                            <form action="includes/mark_as_read.php" method="POST" class="inline-form">
+                                                <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
+                                                <button type="submit" class="btn-secondary btn-small">
+                                                    Отметить как прочитанное
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+                                        
+                                        <button type="button" class="btn-view-details" 
+                                                onclick="showRequestDetails(<?php echo $request['id']; ?>)">
+                                            Подробнее
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        <?php endif; ?>
+                        <?php endforeach; ?>
                     </div>
-                    
-                    <div class="request-card-footer">
-                        <div class="request-actions">
-                            <?php if (!$request['is_read']): ?>
-                                <form action="includes/mark_as_read.php" method="POST" class="inline-form">
-                                    <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
-                                    <button type="submit" class="btn-secondary btn-small">
-                                        Отметить как прочитанное
-                                    </button>
-                                </form>
-                            <?php endif; ?>
-                            
-                            <button type="button" class="btn-view-details" 
-                                    onclick="showRequestDetails(<?php echo $request['id']; ?>)">
-                                Подробнее
-                            </button>
-                        </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Модальное окно для просмотра полной заявки -->
+            <div id="requestModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modalTitle"></h3>
+                        <button class="modal-close" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modalContent"></div>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
-</div>
-
-<!-- Модальное окно для просмотра полной заявки -->
-<div id="requestModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="modalTitle"></h3>
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div id="modalContent"></div>
-        </div>
-    </div>
-</div>
+            </div>
 
             <!-- Вкладка новой заявки -->
             <div id="new-request" class="tab-content">
                 <h2>Оставить заявку</h2>
-                <form action="includes/create_request.php" method="POST" id="requestForm">
+                <form action="includes/create_message.php" method="POST" id="requestForm">
                     <div class="form-group">
                         <label>Тип услуги:</label>
                         <select name="service_type" required>
@@ -381,6 +377,7 @@ try {
                     <button type="submit" class="btn-primary">Отправить заявку</button>
                 </form>
             </div>
+        </div>
     </div>
 
     <script>
@@ -395,80 +392,94 @@ try {
 
             // Показать выбранную вкладку
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            
+            // Найти кнопку по id вкладки и активировать ее
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(tabName === 'profile' ? 'Профиль' : 
+                                            tabName === 'requests' ? 'Мои заявки' : 'Новая заявка')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Если открыли вкладку с заявками, убираем подсветку
+            if (tabName === 'requests') {
+                const requestsBtn = document.querySelector('.tab-button.unread');
+                if (requestsBtn) {
+                    requestsBtn.classList.remove('unread');
+                }
+            }
         }
 
         // Функция для показа деталей заявки
-function showRequestDetails(requestId) {
-    // Здесь можно сделать AJAX запрос для получения полных данных
-    // Пока просто покажем сообщение
-    fetch('includes/get_request_details.php?id=' + requestId)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('modalTitle').textContent = data.subject;
-                document.getElementById('modalContent').innerHTML = `
-                    <div class="request-full-details">
-                        <div class="detail-section">
-                            <h4>Сообщение:</h4>
-                            <div class="detail-content">${data.message}</div>
-                        </div>
-                        
-                        ${data.admin_response ? `
-                        <div class="detail-section">
-                            <h4>Ответ администратора:</h4>
-                            <div class="detail-content">${data.admin_response}</div>
-                            <div class="response-meta">
-                                Ответ дан: ${data.responded_at}
-                            </div>
-                        </div>
-                        ` : ''}
-                        
-                        <div class="detail-section">
-                            <h4>Информация о заявке:</h4>
-                            <div class="detail-grid">
-                                <div class="detail-item">
-                                    <strong>Номер:</strong> ${data.id}
+        function showRequestDetails(requestId) {
+            fetch('includes/get_request_details.php?id=' + requestId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('modalTitle').textContent = data.subject;
+                        document.getElementById('modalContent').innerHTML = `
+                            <div class="request-full-details">
+                                <div class="detail-section">
+                                    <h4>Сообщение:</h4>
+                                    <div class="detail-content">${data.message}</div>
                                 </div>
-                                <div class="detail-item">
-                                    <strong>Создана:</strong> ${data.created_at}
-                                </div>
-                                <div class="detail-item">
-                                    <strong>Статус:</strong> ${data.is_read ? 'Прочитано' : 'Новая'}
-                                </div>
-                                ${data.ip_address ? `
-                                <div class="detail-item">
-                                    <strong>IP адрес:</strong> ${data.ip_address}
+                                
+                                ${data.admin_response ? `
+                                <div class="detail-section">
+                                    <h4>Ответ администратора:</h4>
+                                    <div class="detail-content">${data.admin_response}</div>
+                                    <div class="response-meta">
+                                        Ответ дан: ${data.responded_at}
+                                    </div>
                                 </div>
                                 ` : ''}
+                                
+                                <div class="detail-section">
+                                    <h4>Информация о заявке:</h4>
+                                    <div class="detail-grid">
+                                        <div class="detail-item">
+                                            <strong>Номер:</strong> ${data.id}
+                                        </div>
+                                        <div class="detail-item">
+                                            <strong>Создана:</strong> ${data.created_at}
+                                        </div>
+                                        <div class="detail-item">
+                                            <strong>Статус:</strong> ${data.is_read ? 'Прочитано' : 'Новая'}
+                                        </div>
+                                        ${data.ip_address ? `
+                                        <div class="detail-item">
+                                            <strong>IP адрес:</strong> ${data.ip_address}
+                                        </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                `;
-                
-                document.getElementById('requestModal').style.display = 'block';
+                        `;
+                        
+                        document.getElementById('requestModal').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Не удалось загрузить детали заявки');
+                });
+        }
+
+        // Функции для модального окна
+        function closeModal() {
+            document.getElementById('requestModal').style.display = 'none';
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('requestModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
             }
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-            alert('Не удалось загрузить детали заявки');
-        });
-}
-
-// Функции для модального окна
-function closeModal() {
-    document.getElementById('requestModal').style.display = 'none';
-}
-
-// Закрытие модального окна при клике вне его
-window.onclick = function(event) {
-    const modal = document.getElementById('requestModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
+        }
     </script>
 
-  <script src="js/address-autocomplete.js"></script>
+    <script src="js/address-autocomplete.js"></script>
 </body>
+</html>

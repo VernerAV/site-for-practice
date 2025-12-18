@@ -87,7 +87,10 @@
     opacity: 0.8;
 }
 
-.btn {
+
+a.btn {
+    display: inline-block;
+    text-decoration: none;
     background: #ff5722;
     color: white;
     border: none;
@@ -96,6 +99,12 @@
     border-radius: 50px;
     cursor: pointer;
     margin-bottom: 30px;
+}
+
+a.btn:hover {
+    background: linear-gradient(135deg, #ff5722, #f7360a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
 }
 
 .tags {
@@ -512,7 +521,7 @@ table.iksweb tr:first-child td {
     transform: scale(1.05);
 }
 
-.btn-primary {
+a.btn-primary {
     background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     color: white;
     border: none;
@@ -528,19 +537,19 @@ table.iksweb tr:first-child td {
     box-shadow: 0 5px 20px rgba(0,123,255,0.3);
 }
 
-.btn-primary:hover {
+a.btn-primary:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(0,123,255,0.4);
     background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
 }
 
-.btn-primary::after {
+a.btn-primary::after {
     content: '→';
     font-size: 1.2rem;
     transition: transform 0.3s ease;
 }
 
-.btn-primary:hover::after {
+a.btn-primary:hover::after {
     transform: translateX(5px);
 }
 

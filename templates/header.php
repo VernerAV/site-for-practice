@@ -117,23 +117,34 @@ function selectSuggestion(text) {
     </div>
 
     <nav class="main-menu">
-        <ul>
+         <ul>
             <li><a href="index.php">Главная</a></li>
             <li><a href="news.php">Новости</a></li>
             <li><a href="price.php">Платные услуги</a></li>
             <li><a href="about.php">О нас</a></li>
-            <li><?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                    <a href="admin_massege.php">Сообщения</a>
-                <?php else: ?>
-                    <a href="contact.php">Сообщения</a>
-                <?php endif; ?></li>
-            <li>
-                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                    <a href="admin.php">Панель администратора</a>
-                <?php else: ?>
-                    <a href="user.php">Личный кабинет</a>
-                <?php endif; ?>
-            </li>
+            
+            <?php if (isset($_SESSION['user_role']) && !empty($_SESSION['user_role'])): ?>
+                <li><a href="user.php?tab-content">Заявки</a></li>
+            <?php endif; ?>
+             <?php if (isset($_SESSION['user_role'])): ?>
+                <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                    <li><a href="admin.php">Панель администратора</a></li>
+                <?php elseif ($_SESSION['user_role'] === 'user'): ?>
+                    <li><a href="admin.php">Личный кабинет</a></li>
+                <?php endif; ?> 
+            <?php else: ?>
+                <li><a href="contact.php">Оставить заявку</a></li>
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['user_role'])): ?>
+                <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                    <li><a href="admin.php">Панель администратора</a></li>
+                <?php elseif ($_SESSION['user_role'] === 'user'): ?>
+                    <li><a href="admin.php">Личный кабинет</a></li>
+                <?php endif; ?> 
+            <?php else: ?>
+                <li><a href="contact.php">Оставить заявку</a></li>
+            <?php endif; ?>
         </ul>
 
         <div class="contact-info">

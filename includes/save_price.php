@@ -51,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 } else {
-    header('Location: ../admin.php');
+    $section = $_GET['section'] ?? 'news';
+    header("Location: ../admin.php?section=$section");
     exit();
 }
 ?>

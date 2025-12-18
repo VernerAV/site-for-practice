@@ -66,7 +66,7 @@ h1{
 }
 
 /* форма поиска */
-form {
+#search form {
     margin-left: 140px;
     background-color: white;
     border-radius: 20px;
@@ -77,27 +77,27 @@ form {
     height: fit-content;
 }
 
-form input {
+#search form input {
     border: none;
     width: 430px;
     border-radius: 20px;
       outline: none;
 }
 
-form input::after {
+#search form input::after {
     border: none;
 }
-form button {
+#search form button {
     background-color: white;
     border: none;
     width: min-content;
     border-radius: 50%;
 }
 
-form button:hover {
+#search form button:hover {
     cursor: pointer;
 }
-form img {
+#search form img {
     width: 20px;
 }
 
