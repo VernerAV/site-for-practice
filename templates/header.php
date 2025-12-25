@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/header.css">
     <!-- Скрипт анимация -->
      <script src="js/search.js" defer></script>
+     <script src="js/isAccessibilityMode.js" defer></script>
 </head>
 <body>
     <div class="header">
@@ -115,7 +116,9 @@ function selectSuggestion(text) {
             <?php endif; ?>
         </div>
     </div>
-
+<button id="accessibilityToggle" aria-label="Версия для слабовидящих">
+  👁 Версия для слабовидящих
+</button>
     <nav class="main-menu">
          <ul>
             <li><a href="index.php">Главная</a></li>
